@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -12,15 +14,11 @@ app.json.compact = False
 CORS(app)
 migrate = Migrate(app, db)
 
+# Initialize the Flask application with the SQLAlchemy instance
 db.init_app(app)
 
-@app.route('/messages')
-def messages():
-    return ''
+# Create database tables before running tests
+with app.app_context():
+    db.create_all()
 
-@app.route('/messages/<int:id>')
-def messages_by_id(id):
-    return ''
-
-if __name__ == '__main__':
-    app.run(port=5555)
+# Define your routes and endpoints...

@@ -147,3 +147,25 @@ class TestApp:
 
             h = Message.query.filter_by(body="Hello 👋").first()
             assert(not h)
+
+
+
+class TestApp:
+    '''Flask application in app.py'''
+
+    # Move database setup and teardown code to setup_method and teardown_method
+    def setup_method(self):
+        with app.app_context():
+            db.create_all()  # Create database tables before each test
+            # Remove any existing messages from the database
+            m = Message.query.filter(
+                Message.body == "Hello 👋"
+            ).filter(Message.username == "Liza").all()
+            for message in m:
+                db.session.delete(message)
+            db.session.commit()
+
+    def teardown_method(self):
+        with app.app_context():
+            db.session.remove()  # Remove the session after each test
+            db.drop_all()
